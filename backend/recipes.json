@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Tomato Pasta",
+    "ingredients": ["tomato", "pasta", "garlic"],
+    "diet": "vegetarian",
+    "time": 20,
+    "calories": 350,
+    "steps": ["Boil pasta", "Prepare sauce", "Mix and serve"]
+  },
+  {
+    "name": "Fruit Salad",
+    "ingredients": ["apple", "banana", "orange"],
+    "diet": "vegan",
+    "time": 10,
+    "calories": 150,
+    "steps": ["Cut fruits", "Mix in bowl", "Serve chilled"]
+  }
+]
