@@ -8,18 +8,18 @@ function App() {
   const [time, setTime] = useState('');
   const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       const res = await axios.post(`${process.env.REACT_APP_API_URL}/recommend`, {
         ingredients: ingredients.split(',').map((item) => item.trim()),
         diet: diet,
         time: time ? parseInt(time) : null
       });
-
-      console.log("Backend response:", res.data);
 
       const receivedRecipes = Array.isArray(res.data)
         ? res.data
@@ -33,12 +33,14 @@ function App() {
       setError('Something went wrong while fetching recipes. Please try again.');
       setRecipes([]);
     }
+    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 to-blue-100 p-6">
       <div className="max-w-3xl mx-auto bg-white shadow-2xl rounded-xl p-8">
         <h1 className="text-4xl font-extrabold text-center text-green-800 mb-8">🥗 Recipe Recommender</h1>
+        
         <form onSubmit={handleSubmit} className="space-y-6">
           <input
             type="text"
@@ -69,12 +71,11 @@ function App() {
           </button>
         </form>
 
-        {error && (
-          <p className="text-red-600 text-center mt-6 font-semibold">{error}</p>
-        )}
+        {loading && <p className="text-center mt-6 text-green-600 font-semibold">Loading recipes...</p>}
+        {error && <p className="text-red-600 text-center mt-6 font-semibold">{error}</p>}
 
         <div className="mt-10 space-y-6">
-          {recipes.length === 0 && !error && (
+          {!loading && recipes.length === 0 && !error && (
             <p className="text-center text-gray-600">No recipes found. Try different ingredients!</p>
           )}
           {recipes.map((recipe, idx) => (
@@ -84,7 +85,7 @@ function App() {
               <p><span className="font-semibold">🧘 Diet:</span> {recipe.diet}</p>
               <p><span className="font-semibold">⏱️ Time:</span> {recipe.time} min</p>
               <p><span className="font-semibold">🔥 Calories:</span> {recipe.calories}</p>
-              <p><span className="font-semibold">👨‍🍳 Steps:</span> {recipe.steps.join(' → ')}</p>
+              <p><span className="font-semibold">👨‍🍳 Steps:</span> {recipe.steps && recipe.steps.length > 0 ? recipe.steps.join(' → ') : 'Not available'}</p>
             </div>
           ))}
         </div>
